@@ -1,0 +1,34 @@
+{
+  "name": "create-x",
+  "version": "0.1.0",
+  "description": "Create project from template.",
+  "bin": {
+    "create-x": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "create-x": "ts-node src/index.ts",
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "postbuild": "chmod +x dist/index.js",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "get-package-info": "github:arzyu/get-package-info#v0.1.0"
+  },
+  "devDependencies": {
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arzyu/create-x"
+  },
+  "license": "MIT"
+}
