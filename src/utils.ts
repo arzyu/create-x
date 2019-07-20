@@ -78,7 +78,8 @@ export const syncRepo = (repo: string) => {
   return new Promise<string>((resolve, reject) => {
     const syncRepoCmd = [
       "git fetch",
-      "git reset origin/master --hard"
+      "git reset origin/master --hard",
+      "git submodule update --init --remote"
     ].join(" && ");
 
     spawnSync(syncRepoCmd, { shell: true, cwd: repoPath, stdio: [null, "inherit", "inherit"] });
