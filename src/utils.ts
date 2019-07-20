@@ -87,8 +87,21 @@ export const syncRepo = (repo: string) => {
 };
 
 export const selectTemplate = (repoPath: string) => {
-  const templatePaths = globSync("*/package.json", { cwd: repoPath })
-      .map(item => path.resolve(repoPath, path.dirname(item)));
+  const isValidTemplate = (templatePath: string) => {
+    const templateFiles = path.resolve(templatePath, "files/");
+    const templatePackage = path.resolve(templatePath, "package.json");
+
+    return fs.existsSync(templateFiles) && fs.statSync(templateFiles).isDirectory() &&
+        fs.existsSync(templatePackage) && fs.statSync(templatePackage).isFile();
+  };
+
+  if (isValidTemplate(repoPath)) {
+    return Promise.resolve(repoPath);
+  }
+
+  const templatePaths = globSync("*/", { cwd: repoPath })
+      .map(item => path.resolve(repoPath, item))
+      .filter(templatePath => isValidTemplate(templatePath));
 
   if (!templatePaths.length) {
     throw new Error(chalk.red("No available x-templates"));

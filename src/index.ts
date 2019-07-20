@@ -14,11 +14,10 @@ import createProject from "./createProject";
 program
   .version(getPackageInfo(resolve(__dirname, "..")).version)
   .usage("[options] <project-dir>")
-  .option("-t, --template <x-template-repo>", "create project from x-template-repo", resolveRepo)
-  .option("-i, --index <x-index-repo>", "show templates descriped in x-index-repo to select", resolveRepo)
+  .option("--from <template-repo/template-collection-repo>", "create project from template", resolveRepo)
   .parse(process.argv);
 
-const { template: templateRepo, index: indexRepo, args } = program;
+const { from: repo, args } = program;
 
 if (args.length !== 1) {
   program.outputHelp(chalk.red);
@@ -32,29 +31,17 @@ if (fs.pathExistsSync(projectDir) && !isEmptyDir(projectDir)) {
   process.exit(1);
 }
 
-if (typeof templateRepo === "string") {
-  if (!templateRepo.length) {
-    console.log(chalk.red("Invalid <x-template-repo>\n"));
+if (typeof repo !== "string") {
+  console.log(chalk.red("Require '--from' parameter\n"));
+  program.outputHelp();
+} else {
+  if (!repo.length) {
+    console.log(chalk.red("Invalid <template-repo/template-collection-repo>\n"));
     outputRepoFormats();
   } else {
-    syncRepo(templateRepo)
-      .then(repoPath => createProject(projectDir, repoPath))
-      .catch(error => console.log(chalk.red(error)));
-  }
-
-} else
-if (typeof indexRepo === "string") {
-  if (!indexRepo.length) {
-    console.log(chalk.red("Invalid <x-index-repo>\n"));
-    outputRepoFormats();
-  } else {
-    syncRepo(indexRepo)
+    syncRepo(repo)
       .then(repoPath => selectTemplate(repoPath))
       .then(templatePath => createProject(projectDir, templatePath))
       .catch(error => console.log(chalk.red(error)));
   }
-
-} else {
-  console.log(chalk.red("Require '--template' or '--index' parameter\n"));
-  program.outputHelp();
 }
