@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "create-x": "ts-node src/index.ts",
+    "create-x:debug": "node --inspect -r ts-node/register src/index.ts",
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "postbuild": "chmod +x dist/index.js",
