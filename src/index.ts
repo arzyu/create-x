@@ -6,13 +6,13 @@ import program from "commander";
 import chalk from "chalk";
 import fs from "fs-extra";
 import { sync as isEmptyDir } from "empty-dir";
-import { getPackageInfo } from "get-package-info";
+import { getJson } from "@arzyu/get-json";
 
 import { resolveRepo, outputRepoFormats, syncRepo, selectTemplate } from "./utils";
 import createProject from "./createProject";
 
 program
-  .version(getPackageInfo(resolve(__dirname, "..")).version)
+  .version(getJson(resolve(__dirname, "../package.json")).version)
   .usage("[options] <project-dir>")
   .option("--from <template-repo/template-collection-repo>", "create project from template", resolveRepo)
   .parse(process.argv);

@@ -3,7 +3,7 @@ import { spawnSync } from "child_process";
 
 import chalk from "chalk";
 import fs from "fs-extra";
-import { getPackageInfo } from "get-package-info";
+import { getJson } from "@arzyu/get-json";
 import { sync as globSync } from "glob";
 import inquirer from "inquirer";
 import uuid from "uuid";
@@ -112,7 +112,8 @@ export const selectTemplate = (repoPath: string) => {
 
   templatePaths.forEach(templatePath => {
     const templateName = path.basename(templatePath);
-    const description = getPackageInfo(templatePath).description || "No description in package.json";
+    const description = getJson(path.resolve(templatePath, "package.json")).description
+      || "No description in package.json";
 
     choices.push({ name: `${templateName}, ${description}`, value: templatePath });
   });
