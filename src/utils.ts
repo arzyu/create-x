@@ -26,10 +26,10 @@ export const resolveRepo = (repo: string) => {
   };
 
   const patterns: RepoPattern[] = [
-    { test: /^[^\/]+\/[^\/]+$/, resolve: repo => `https://github.com/${repo}` },
     { test: /^https?:\/\/.+$/ },
     { test: /^git@.+$/ },
-    { test: /^ssh:\/\/git@.+$/ }
+    { test: /^ssh:\/\/git@.+$/ },
+    { test: /^[^\/]+\/[^\/]+$/, resolve: repo => `https://github.com/${repo}` }
   ];
 
   let resolvedRepo = "";
