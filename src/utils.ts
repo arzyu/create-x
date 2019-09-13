@@ -8,43 +8,18 @@ import { sync as globSync } from "glob";
 import inquirer from "inquirer";
 import uuid from "uuid";
 
-export const outputRepoFormats = () => {
-  console.log("%s\n\n%s\n%s\n%s\n%s\n", ...[
-    "Expected repo formats:",
-    " * github-user/repo",
-    " * https://github.com/user/repo",
-    " * git@github.com:user/repo.git",
-    " * ssh://git@github.com:user/repo.git"
-  ]);
-  process.exit(1);
-};
-
 export const resolveRepo = (repo: string) => {
-  type RepoPattern = {
-    test: RegExp;
-    resolve?: (repo: string) => string;
-  };
-
-  const patterns: RepoPattern[] = [
-    { test: /^https?:\/\/.+$/ },
-    { test: /^git@.+$/ },
-    { test: /^ssh:\/\/git@.+$/ },
-    { test: /^[^\/]+\/[^\/]+$/, resolve: repo => `https://github.com/${repo}` }
+  const patterns = [
+    /^https?:\/\/.+$/,
+    /^git@.+$/,
+    /^ssh:\/\/git@.+$/,
+    /^file:\/\/.+$/
   ];
 
-  let resolvedRepo = "";
-
-  patterns.some(({ test, resolve }) => {
-    const matched = test.test(repo);
-
-    if (matched) {
-      resolvedRepo = resolve ? resolve(repo) : repo;
-    }
-
-    return matched;
-  });
-
-  return resolvedRepo;
+  if (patterns.some(pattern => pattern.test(repo))) return repo;
+  else if (/^\.{1,2}\/.*$/.test(repo)) return `file://${path.resolve(repo)}`;
+  else if (/^[^\/]+\/[^\/]+$/.test(repo)) return `https://github.com/${repo}`;
+  else return "";
 };
 
 export const syncRepo = (repo: string) => {
