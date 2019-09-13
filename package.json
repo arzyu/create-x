@@ -1,6 +1,6 @@
 {
   "name": "create-x",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Create project from template.",
   "bin": {
     "create-x": "dist/index.js"
