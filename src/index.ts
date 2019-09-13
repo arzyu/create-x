@@ -94,3 +94,5 @@ const cmdQuestions = [{
     });
   });
 })();
+
+/* vim: ft=ts */
